@@ -16,7 +16,6 @@ the next:
 | 3 | Video pipeline (tracking → annotated rebuild), PDF reports, annotated-image rendering | ✅ done |
 | 4 | Next.js frontend (dashboard, upload, history, reports, settings, about) | ✅ done |
 | 4.5 | Async video processing (background worker + job status) — fixes the blocking-request issue flagged after Phase 3 | ✅ done |
-| 5 | Dockerization, deployment guide, auth/RBAC | in progress |
 
 ## Phase 2 — dataset prep + training (cloud GPU)
 
