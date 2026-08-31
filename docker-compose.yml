@@ -1,0 +1,91 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: naval-ai-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: naval_user
+      POSTGRES_PASSWORD: naval_pass
+      POSTGRES_DB: naval_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - naval_ai_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U naval_user -d naval_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: naval-ai-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    container_name: naval-ai-backend
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    ports:
+      - "8000:8000"
+    env_file: ./backend/.env
+    environment:
+      # Inside the compose network, services reach each other by name —
+      # override the localhost defaults from .env.
+      DATABASE_URL: postgresql+psycopg2://naval_user:naval_pass@postgres:5432/naval_ai
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/outputs:/app/outputs
+      - ./backend/reports:/app/reports
+      - ./models:/models
+
+  worker:
+    build: ./backend
+    container_name: naval-ai-worker
+    restart: unless-stopped
+    command: ["python", "worker.py"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    env_file: ./backend/.env
+    environment:
+      DATABASE_URL: postgresql+psycopg2://naval_user:naval_pass@postgres:5432/naval_ai
+      REDIS_URL: redis://redis:6379/0
+    volumes:
+      - ./backend/uploads:/app/uploads
+      - ./backend/outputs:/app/outputs
+      - ./backend/reports:/app/reports
+      - ./models:/models
+    # Scale for parallel video processing: docker compose up --scale worker=3
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost:8000/api
+    container_name: naval-ai-frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "3000:3000"
+
+volumes:
+  naval_ai_pgdata:

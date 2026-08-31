@@ -1,0 +1,121 @@
+@import "tailwindcss";
+
+/*
+  Naval AI design tokens.
+
+  Palette: deep navy/near-black abyss background, steel-blue accent
+  (matching the PDF report brand), hazard colors matching
+  backend/config/hazard_rules.yaml exactly so the UI and the reports
+  agree on what "hazardous" looks like.
+
+  Signature element: bracket-cornered panels (see .bracket-panel below) —
+  a targeting-reticle motif appropriate for a detection system, used
+  consistently instead of generic rounded cards.
+*/
+
+:root {
+  --color-abyss: #050810;
+  --color-navy: #0b1526;
+  --color-navy-light: #14233d;
+  --color-navy-border: #223350;
+
+  --color-steel: #4a6fa5;
+  --color-steel-bright: #7fa8d9;
+  --color-mist: #c9d4e3;
+  --color-white: #f4f7fb;
+
+  --color-safe: #4caf6d;
+  --color-suspicious: #e8b93f;
+  --color-hazardous: #e5484d;
+  --color-unknown: #8a94a6;
+
+  --font-display: var(--font-rajdhani), sans-serif;
+  --font-body: var(--font-inter), sans-serif;
+  --font-data: var(--font-jetbrains-mono), monospace;
+}
+
+@theme inline {
+  --color-abyss: var(--color-abyss);
+  --color-navy: var(--color-navy);
+  --color-navy-light: var(--color-navy-light);
+  --color-navy-border: var(--color-navy-border);
+  --color-steel: var(--color-steel);
+  --color-steel-bright: var(--color-steel-bright);
+  --color-mist: var(--color-mist);
+  --color-white: var(--color-white);
+  --color-safe: var(--color-safe);
+  --color-suspicious: var(--color-suspicious);
+  --color-hazardous: var(--color-hazardous);
+  --color-unknown: var(--color-unknown);
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-data: var(--font-data);
+}
+
+body {
+  background: var(--color-abyss);
+  color: var(--color-white);
+  font-family: var(--font-body);
+}
+
+/* Faint tactical grid texture on the deepest background layer only. */
+.grid-texture {
+  background-image:
+    linear-gradient(rgba(74, 111, 165, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74, 111, 165, 0.08) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+/* Signature: targeting-bracket corners on panels, in place of plain borders. */
+.bracket-panel {
+  position: relative;
+  border: 1px solid var(--color-navy-border);
+  background: var(--color-navy);
+}
+
+.bracket-panel::before,
+.bracket-panel::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  pointer-events: none;
+}
+
+.bracket-panel::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid var(--color-steel-bright);
+  border-left: 2px solid var(--color-steel-bright);
+}
+
+.bracket-panel::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid var(--color-steel-bright);
+  border-right: 2px solid var(--color-steel-bright);
+}
+
+/* Keyboard focus visibility */
+:focus-visible {
+  outline: 2px solid var(--color-steel-bright);
+  outline-offset: 2px;
+}
+
+@keyframes radar-sweep {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.radar-sweep {
+  animation: radar-sweep 4s linear infinite;
+  transform-origin: center;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

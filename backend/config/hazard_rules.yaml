@@ -1,0 +1,91 @@
+# Hazard classification rules
+#
+# This file is the single source of truth for mapping a detected ship class
+# to a hazard level. The inference pipeline reads this at runtime — nothing
+# here is hardcoded in Python. To adjust policy, edit this file only.
+#
+# Valid hazard levels: safe | suspicious | hazardous | unknown
+
+default_hazard_level: unknown
+
+ship_classes:
+  cargo_ship:
+    hazard_level: safe
+    notes: "Standard commercial cargo vessel."
+
+  oil_tanker:
+    hazard_level: hazardous
+    notes: "Hazardous cargo (fuel/oil) — flagged regardless of behavior."
+
+  container_ship:
+    hazard_level: safe
+
+  bulk_carrier:
+    hazard_level: safe
+
+  passenger_ship:
+    hazard_level: safe
+
+  cruise_ship:
+    hazard_level: safe
+
+  fishing_vessel:
+    hazard_level: safe
+
+  patrol_boat:
+    hazard_level: hazardous
+    notes: "Military/law-enforcement vessel."
+
+  corvette:
+    hazard_level: hazardous
+    notes: "Military vessel."
+
+  frigate:
+    hazard_level: hazardous
+    notes: "Military vessel."
+
+  destroyer:
+    hazard_level: hazardous
+    notes: "Military vessel."
+
+  aircraft_carrier:
+    hazard_level: hazardous
+    notes: "Military vessel."
+
+  amphibious_assault_ship:
+    hazard_level: hazardous
+    notes: "Military vessel."
+
+  landing_ship:
+    hazard_level: hazardous
+    notes: "Military vessel."
+
+  submarine:
+    hazard_level: hazardous
+    notes: "Military vessel (surface view)."
+
+  tug_boat:
+    hazard_level: safe
+
+  support_vessel:
+    hazard_level: suspicious
+    notes: "Ambiguous role — flagged for manual review by default."
+
+  yacht:
+    hazard_level: safe
+
+  sail_boat:
+    hazard_level: safe
+
+  coast_guard_vessel:
+    hazard_level: safe
+    notes: "Friendly official vessel."
+
+  unknown_vessel:
+    hazard_level: suspicious
+
+# Confidence-based override: if detection confidence is below this value,
+# the hazard level is forced to "unknown" regardless of the class mapping,
+# since low-confidence classifications shouldn't drive a hazard decision.
+low_confidence_threshold: 0.40
+low_confidence_override: unknown

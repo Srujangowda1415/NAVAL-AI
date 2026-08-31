@@ -1,0 +1,50 @@
+# --- Web framework ---
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+python-multipart==0.0.20
+pydantic==2.10.4
+pydantic-settings==2.7.1
+
+# --- ML / CV ---
+ultralytics==8.3.55
+torch
+torchvision
+opencv-python-headless==4.10.0.84
+numpy
+pandas
+scikit-learn
+
+# --- Tracking (bundled with ultralytics, listed for clarity) ---
+lap==0.5.12
+
+# --- Database ---
+sqlalchemy==2.0.36
+psycopg2-binary==2.9.10
+alembic==1.14.0
+
+# --- Background job queue (video processing) ---
+redis==5.2.1
+rq==2.1.0
+
+# --- Auth ---
+# bcrypt pinned <4.1 — passlib 1.7.4 has a known incompatibility with
+# newer bcrypt releases that removed the __about__ module.
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1
+python-jose[cryptography]==3.3.0
+email-validator==2.2.0
+
+# --- Reports ---
+reportlab==4.2.5
+jinja2==3.1.5
+
+# --- Config / env ---
+python-dotenv==1.0.1
+pyyaml==6.0.2
+
+# --- Dev / test ---
+pytest==8.3.4
+httpx==0.28.1
+
+# --- Training-only: weather augmentation (see training/augment_weather.py) ---
+albumentations==2.0.8
