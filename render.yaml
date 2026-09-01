@@ -1,9 +1,10 @@
 services:
-  # FastAPI Backend
+  # FastAPI Backend — uses root Dockerfile so build context can access both
+  # backend/ source and models/weights/ in the same image.
   - type: web
     name: naval-ai-backend
     runtime: docker
-    dockerfilePath: ./backend/Dockerfile
+    dockerfilePath: ./Dockerfile
     dockerContext: ./
     envVars:
       - key: APP_ENV
@@ -44,11 +45,11 @@ services:
       - key: REPORT_DIR
         value: ./reports
 
-  # Background video processing worker
+  # Background video processing worker — same image, different start command
   - type: worker
     name: naval-ai-worker
     runtime: docker
-    dockerfilePath: ./backend/Dockerfile
+    dockerfilePath: ./Dockerfile
     dockerContext: ./
     dockerCommand: python worker.py
     envVars:
@@ -77,7 +78,7 @@ services:
       - key: REPORT_DIR
         value: ./reports
 
-  # Redis (for async video job queue)
+  # Redis — for async video job queue
   - type: redis
     name: naval-ai-redis
     plan: free
