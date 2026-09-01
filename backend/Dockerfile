@@ -13,7 +13,12 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy backend source
 COPY . .
+
+# Copy model weights (from repo root models/ directory into the container)
+# The build context is set to repo root in render.yaml so this path resolves.
+COPY models/weights/ ./models/weights/
 
 RUN mkdir -p uploads outputs reports
 
