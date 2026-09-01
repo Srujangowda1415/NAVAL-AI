@@ -1,10 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Standalone output produces a minimal self-contained server bundle —
-  // used by the multi-stage Dockerfile so the production image doesn't
-  // need to carry the full node_modules tree.
-  output: "standalone",
+  // Note: `output: "standalone"` is used in the Docker deployment path.
+  // On Vercel, we omit it so Vercel can use its own optimised output format.
 };
 
 export default nextConfig;
